@@ -11,15 +11,15 @@ const directoryPath = 'public/images';
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, directoryPath); // Specify the upload directory
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Use the original file name
-  },
+    destination: function (req, file, cb) {
+        cb(null, directoryPath); // Specify the upload directory
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // Use the original file name
+    },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({storage: storage});
 
 
 // Get all secondChanceItems
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
 });
 
 
-router.post('/', upload.single('file'), async(req, res,next) => {
+router.post('/', upload.single('file'), async (req, res, next) => {
     try {
         const db = await connectToDatabase();
         const collection = db.collection("secondChanceItems");
@@ -55,21 +55,23 @@ router.post('/', upload.single('file'), async(req, res,next) => {
     }
 });
 
-/**
 // Get a single secondChanceItem by ID
 router.get('/:id', async (req, res, next) => {
     try {
-        //Step 4: task 1 - insert code here
-        //Step 4: task 2 - insert code here
-        //Step 4: task 3 - insert code here
-        //Step 4: task 4 - insert code here
+        const db = await connectToDatabase();
+        const collection = db.collection("secondChanceItems");
+        const secondChanceItem = await collection.findOne({id: id});
+        if (!secondChanceItem) {
+            return res.status(404).send("secondChanceItem not found");
+        }
+        res.json(secondChanceItem);
     } catch (e) {
         next(e);
     }
 });
-
-// Update and existing item
-router.put('/:id', async(req, res,next) => {
+/**
+ // Update and existing item
+ router.put('/:id', async(req, res,next) => {
     try {
         //Step 5: task 1 - insert code here
         //Step 5: task 2 - insert code here
@@ -81,8 +83,8 @@ router.put('/:id', async(req, res,next) => {
     }
 });
 
-// Delete an existing item
-router.delete('/:id', async(req, res,next) => {
+ // Delete an existing item
+ router.delete('/:id', async(req, res,next) => {
     try {
         //Step 6: task 1 - insert code here
         //Step 6: task 2 - insert code here
