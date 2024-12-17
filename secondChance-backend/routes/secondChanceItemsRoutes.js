@@ -26,9 +26,9 @@ const upload = multer({storage: storage});
 router.get('/', async (req, res, next) => {
     logger.info('/ called');
     try {
-        const db = await connectToDatabase()
-        const collection = db.collection("secondChanceItems")
-        const secondChanceItems = await collection.find({}).toArray();
+        const db = await connectToDatabase();
+        const collection = db.collection("secondChanceItems");
+        const secondChanceItems = await collection.find().toArray();
         res.json(secondChanceItems);
     } catch (e) {
         logger.console.error('oops something went wrong', e)
@@ -49,7 +49,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         const date_added = Math.floor(new Date().getTime() / 1000);
         secondChanceItem.date_added = date_added
         secondChanceItem = await collection.insertOne(secondChanceItem);
-        res.status(201).json(secondChanceItem.ops[0]);
+        res.status(201).json(secondChanceItem.id);
     } catch (e) {
         next(e);
     }
@@ -59,6 +59,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const db = await connectToDatabase();
+        const id = req.params.id
         const collection = db.collection("secondChanceItems");
         const secondChanceItem = await collection.findOne({id: id});
         if (!secondChanceItem) {
@@ -74,6 +75,7 @@ router.get('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         const db = await connectToDatabase();
+        let id = req.params.id
         const collection = db.collection("secondChanceItems");
         const secondChanceItem = await collection.findOne({id});
         if (!secondChanceItem) {

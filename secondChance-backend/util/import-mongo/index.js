@@ -13,7 +13,7 @@ const data = JSON.parse(fs.readFileSync(filename, 'utf8')).docs;
 
 // connect to database and insert data into the collection
 async function loadData() {
-    const client = new MongoClient(url);
+    const client = new MongoClient("mongodb://localhost:27017/secondChance");
 
     try {
         // Connect to the MongoDB client
@@ -28,7 +28,7 @@ async function loadData() {
         let cursor = await collection.find({});
         let documents = await cursor.toArray();
 
-        if(documents.length == 0) {
+        if (documents.length !== 0) {
             // Insert data into the collection
             const insertResult = await collection.insertMany(data);
             console.log('Inserted documents:', insertResult.insertedCount);
@@ -47,4 +47,4 @@ loadData();
 
 module.exports = {
     loadData,
-  };
+};

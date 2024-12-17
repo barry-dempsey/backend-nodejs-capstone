@@ -6,11 +6,12 @@ const MongoClient = require('mongodb').MongoClient;
 let url = `${process.env.MONGO_URL}`;
 
 let dbInstance = null;
-const dbName = `${process.env.MONGO_DB}`;
+//const dbName = `${process.env.MONGO_DB}`;
+const dbName = "secondChance"
 
 async function connectToDatabase() {
 
-    const client = new MongoClient(url);
+    const client = new MongoClient("mongodb://localhost:27017/secondChance");
 
     // Task 1: Connect to MongoDB
     await client.connect()
