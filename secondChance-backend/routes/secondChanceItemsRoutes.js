@@ -36,21 +36,26 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-/**
-router.post('/', {Step 3: Task 6 insert code here}, async(req, res,next) => {
-    try {
 
-        //Step 3: task 1 - insert code here
-        //Step 3: task 2 - insert code here
-        //Step 3: task 3 - insert code here
-        //Step 3: task 4 - insert code here
-        //Step 3: task 5 - insert code here
+router.post('/', upload.single('file'), async(req, res,next) => {
+    try {
+        const db = await connectToDatabase();
+        const collection = db.collection("secondChanceItems");
+        let secondChanceItem = req.body;
+        const lastItemQuery = await collection.find().sort({'id': -1}).limit(1);
+        await lastItemQuery.forEach(item => {
+            secondChanceItem.id = (parseInt(item.id) + 1).toString();
+        });
+        const date_added = Math.floor(new Date().getTime() / 1000);
+        secondChanceItem.date_added = date_added
+        secondChanceItem = await collection.insertOne(secondChanceItem);
         res.status(201).json(secondChanceItem.ops[0]);
     } catch (e) {
         next(e);
     }
 });
 
+/**
 // Get a single secondChanceItem by ID
 router.get('/:id', async (req, res, next) => {
     try {
