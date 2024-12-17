@@ -26,12 +26,8 @@ const upload = multer({ storage: storage });
 router.get('/', async (req, res, next) => {
     logger.info('/ called');
     try {
-        //Step 2: task 1 - insert code here
-        //Step 2: task 2 - insert code here
-        //Step 2: task 3 - insert code here
-        //Step 2: task 4 - insert code here
-
-        const collection = db.collection("secondChanceItems");
+        const db = await connectToDatabase()
+        const collection = db.collection("secondChanceItems")
         const secondChanceItems = await collection.find({}).toArray();
         res.json(secondChanceItems);
     } catch (e) {
@@ -40,7 +36,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-// Add a new item
+/**
 router.post('/', {Step 3: Task 6 insert code here}, async(req, res,next) => {
     try {
 
@@ -91,5 +87,6 @@ router.delete('/:id', async(req, res,next) => {
         next(e);
     }
 });
+ **/
 
 module.exports = router;
