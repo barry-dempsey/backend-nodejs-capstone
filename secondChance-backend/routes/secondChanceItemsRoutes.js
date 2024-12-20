@@ -5,6 +5,10 @@ const fs = require('fs');
 const router = express.Router();
 const connectToDatabase = require('../models/db');
 const logger = require('../logger');
+const Items = require('../models/items')
+const Users = require("../models/users");
+const jwt = require("jsonwebtoken");
+const {parse} = require("dotenv");
 
 // Define the upload directory path
 const directoryPath = 'public/images';
@@ -26,42 +30,63 @@ const upload = multer({storage: storage});
 router.get('/', async (req, res, next) => {
     logger.info('/ called');
     try {
-        const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
-        const secondChanceItems = await collection.find().toArray();
+        const secondChanceItems = await Items.find();
         res.json(secondChanceItems);
     } catch (e) {
-        logger.console.error('oops something went wrong', e)
+        //logger.console.error('oops something went wrong', e)
         next(e);
     }
 });
 
+
+async function id(secondChanceItem) {
+    const lastItemQuery = await Items.find().sort({'id': -1}).limit(1);
+    return await lastItemQuery.forEach(item => {
+        secondChanceItem.id = (parseInt(item.id) + 1).toString();
+    })
+}
 
 router.post('/', upload.single('file'), async (req, res, next) => {
     try {
-        const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
         let secondChanceItem = req.body;
-        const lastItemQuery = await collection.find().sort({'id': -1}).limit(1);
-        await lastItemQuery.forEach(item => {
-            secondChanceItem.id = (parseInt(item.id) + 1).toString();
+        const item = new Items({
+            "id": id(secondChanceItem),
+            "name": secondChanceItem['name'],
+            "category": secondChanceItem['category'],
+            "condition": secondChanceItem['category'],
+            "date_added": date_added(),
+            "zip_code": secondChanceItem['zip_code'],
+            "age_days": secondChanceItem['age_days'],
+            "age_years": secondChanceItem['age_years'],
+            "description": secondChanceItem['description'],
+            "comments": secondChanceItem['comments'],
         });
-        const date_added = Math.floor(new Date().getTime() / 1000);
-        secondChanceItem.date_added = date_added
-        secondChanceItem = await collection.insertOne(secondChanceItem);
-        res.status(201).json(secondChanceItem.id);
+
+        // Saving the new item to the MongoDB 'items' collection
+        await item.save();
+        //logger.info("New user added successfully! " + user.user_name)
+
+        /**
+         const lastItemQuery = await collection.find().sort({'id': -1}).limit(1);
+         await lastItemQuery.forEach(item => {
+            secondChanceItem.id = (parseInt(item.id) + 1).toString();
+        });**/
+        res.status(201).json(secondChanceItem);
     } catch (e) {
         next(e);
     }
 });
+
+
+function date_added() {
+    return Math.floor(new Date().getTime() / 1000);
+}
 
 // Get a single secondChanceItem by ID
 router.get('/:id', async (req, res, next) => {
     try {
-        const db = await connectToDatabase();
         const id = req.params.id
-        const collection = db.collection("secondChanceItems");
-        const secondChanceItem = await collection.findOne({id: id});
+        const secondChanceItem = await Items.find({id: id})
         if (!secondChanceItem) {
             return res.status(404).send("secondChanceItem not found");
         }

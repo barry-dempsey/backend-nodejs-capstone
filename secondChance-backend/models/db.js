@@ -1,5 +1,6 @@
 // db.js
 require('dotenv').config();
+const mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient;
 
 /** MongoDB's connection URL with authentication options **/
@@ -11,13 +12,9 @@ const dbName = "secondChance"
 
 async function connectToDatabase() {
 
-    const client = new MongoClient("mongodb://localhost:27017/secondChance");
-
-    // Task 1: Connect to MongoDB
-    await client.connect()
-
-    // Task 2: Connect to database giftDB and store in variable dbInstance
-    let dbInstance = client.db(dbName)
+    // MongoDB's connection URI and database name
+    const uri = `mongodb://localhost:27017/${dbName}`;
+    const dbInstance = mongoose.connect(uri, {'dbName': `${dbName}`});
 
     // Task 3: Return database instance
     if (dbInstance) {
