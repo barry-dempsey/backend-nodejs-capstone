@@ -8,10 +8,10 @@ const JWT_SECRET = "JWT_SECRET"
 // Search for gifts
 router.post('/register', async (req, res, next) => {
     try {
-        const data = req.body;
+        const data = req.query.formData
         console.log(data)
         let email = data['email'];
-        const documents = await Users.find({email: email});
+        const documents = await Users.findOne({email: email});
         if (documents.length > 0) {
             return res.send("User already exists");
         }
@@ -42,6 +42,41 @@ router.post('/register', async (req, res, next) => {
     } catch (e) {
         console.log(e)
         res.send(500)
+    }
+});
+
+router.post('/login', async (req, res) => {
+    try {
+        const data = req.body;
+        console.log(data);
+        let email = data['email'];
+        let password = data['password'];
+
+        const theUser = await Users.findOne({email: email});
+
+        if (theUser) {
+            let result = await bcryptjs.compare(req.body.password, theUser.password)
+            if (!result) {
+                //logger.error('Passwords do not match');
+                return res.status(404).json({error: 'Wrong password'});
+            }
+            const userName = theUser.firstName;
+            const userEmail = theUser.email;
+
+            let payload = {
+                user: {
+                    first_name: theUser.firstName,
+                },
+            };
+            const auth_token = jwt.sign(payload, JWT_SECRET)
+            res.json({auth_token, email});
+        } else {
+            //logger.error('User not found');
+            return res.status(404).json({error: 'User not found'});
+        }
+    } catch (e) {
+        return res.status(500).send('Internal server error');
+
     }
 });
 
