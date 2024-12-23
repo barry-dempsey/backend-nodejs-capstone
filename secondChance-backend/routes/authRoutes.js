@@ -3,22 +3,23 @@ const router = express.Router();
 const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
 const Users = require('../models/users')
+const {body, validationResult} = require('express-validator');
 const JWT_SECRET = "JWT_SECRET"
 
 // Search for gifts
 router.post('/register', async (req, res, next) => {
     try {
-        const data = req.query.formData
+        const data = req.headers
         console.log(data)
         let email = data['email'];
-        const documents = await Users.findOne({email: email});
-        if (documents.length > 0) {
+        const theUser = await Users.findOne({email: email});
+        if (theUser) {
             return res.send("User already exists");
         }
 
         // Creating a new instance of the User model with data from the request
         const salt = await bcryptjs.genSalt(10);
-        const hash = await bcryptjs.hash(req.body.password, salt);
+        const hash = await bcryptjs.hash(data['password'], salt);
 
         const user = new Users({
             "first_name": data['firstName'],
@@ -29,13 +30,13 @@ router.post('/register', async (req, res, next) => {
 
         const payload = {
             user: {
-                id: user.insertedId,
+                id: user.insertedId
             },
         };
 
         const auth_token = jwt.sign(payload, JWT_SECRET);
 
-        // Saving the new customer to the MongoDB 'customers' collection
+        // Saving the new user to the MongoDB 'users' collection
         await user.save();
         //logger.info("New user added successfully! " + user.user_name)
         res.json({auth_token, email});
@@ -47,7 +48,7 @@ router.post('/register', async (req, res, next) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const data = req.body;
+        const data = req.headers;
         console.log(data);
         let email = data['email'];
         let password = data['password'];
@@ -77,6 +78,43 @@ router.post('/login', async (req, res) => {
     } catch (e) {
         return res.status(500).send('Internal server error');
 
+    }
+});
+
+router.put('/update', async (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        //logger.error('Validation errors in update request', errors.array());
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    try {
+        const email = req.headers.email;
+
+        if (!email) {
+            //logger.error('Email not found in the request headers');
+            return res.status(400).json({error: "Email not found in the request headers"});
+        }
+        const existingUser = await Users.findOne({email: email});
+        existingUser.updatedAt = new Date();
+
+        const updatedUser = await Users.findOneAndUpdate(
+            {email},
+            {$set: existingUser},
+            {returnDocument: 'after'}
+        );
+        const payload = {
+            user: {
+                id: updatedUser._id.toString(),
+            },
+        };
+
+        const authtoken = jwt.sign(payload, JWT_SECRET);
+        res.json({authtoken});
+    } catch (e) {
+        return res.status(500).send('Internal server error');
     }
 });
 

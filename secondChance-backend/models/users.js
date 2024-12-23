@@ -9,11 +9,11 @@ const usersSchema = new Schema({
     // Field for storing the user's name as a string.
     first_name: {
         type: String,   // Data type is String.
-        required: true  // The field is required and must have a value.
+        required: false  // The field is required and must have a value.
     },
     last_name: {
         type: String,   // Data type is String.
-        required: true  // The field is required and must have a value.
+        required: false  // The field is required and must have a value.
     },
     // Field for storing the user's email address as a string.
     email: {
