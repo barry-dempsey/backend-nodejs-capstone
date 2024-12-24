@@ -22,10 +22,11 @@ router.post('/register', async (req, res, next) => {
         const hash = await bcryptjs.hash(data['password'], salt);
 
         const user = new Users({
-            "first_name": data['firstName'],
-            "last_name": data['lastName'],
-            "password": hash,
-            "email": data['email']
+            first_name: data['firstName'],
+            last_name: data['lastName'],
+            password: hash,
+            email: data['email'],
+            createdAt: new Date()
         });
 
         const payload = {
