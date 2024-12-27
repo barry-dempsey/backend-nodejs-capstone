@@ -1,4 +1,4 @@
-/*jshint esversion: 8*/
+  /* jshint esversion: 8 */
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
@@ -34,7 +34,7 @@ app.use('/api/secondchance/search', searchRoutes)
 const pinoHttp = require('pino-http')
 const logger = require('./logger')
 
-app.use(pinoHttp({logger}))
+app.use(pinoHttp({ logger }))
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -42,7 +42,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Internal Server Error')
 })
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.send('Inside the server')
 })
 
