@@ -34,7 +34,7 @@ function ItemPage() {
       formData.append('age_days', age_days);
       formData.append('age_years', (age_days/365).toFixed(2));
       formData.append('description', document.getElementById('description').value);
-      formData.append('image', `/images/${file.name}`);
+      //formData.append('image', `/images/${file.name}`);
       formData.append('comments', []);
 
           try {

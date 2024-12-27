@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {urlConfig} from '../../config';
 import { useAppContext } from '../../context/AppContext';
+import { log } from '@trarn/react-logger';
 
 import './RegisterPage.css';
 
@@ -20,20 +21,25 @@ function RegisterPage() {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
+                'firstName': firstName,
+                'secondName': lastName,
+                'email': email,
+                'password': password
             },
-            body: JSON.stringify({
+            /**body: JSON.stringify({
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
                 password: password
-            })
+            })**/
         });
+        log.info(firstName, lastName, email, password)
 
         const json = await response.json();
         console.log('json data', json);
         console.log('er', json.error);
 
-        // console.log('ers',json.errors);
+        log.info('ers',json.errors);
 
         if (json.authtoken) {
             sessionStorage.setItem('auth-token', json.authtoken);

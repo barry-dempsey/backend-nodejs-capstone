@@ -1,6 +1,7 @@
 // Importing the 'mongoose' library, which is an ODM (Object Data Modeling) library for MongoDB.
 const mongoose = require('mongoose');
 const {Int32} = require("mongodb");
+const {fakeServer} = require("sinon");
 
 // Creating a schema using the 'Schema' class from mongoose.
 const Schema = mongoose.Schema;
@@ -10,7 +11,7 @@ const itemsSchema = new Schema({
     // Field for storing the id of the item.
     id: {
         type: String,   // Data type is String.
-        required: false  // The field is required and must have a value.
+        required: true  // The field is required and must have a value.
     },
     name: {
         type: String,   // Data type is String.

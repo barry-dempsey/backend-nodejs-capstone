@@ -39,11 +39,10 @@ router.get('/', async (req, res, next) => {
 });
 
 
-async function id(secondChanceItem) {
-    const lastItemQuery = await Items.find().sort({'id': -1}).limit(1);
-    return await lastItemQuery.forEach(item => {
-        secondChanceItem.id = (parseInt(item.id) + 1).toString();
-    })
+function id(secondChanceItem) {
+    const lastItemQuery = Items.findOne().sort({'id': -1})
+    console.log("Last item found was " + lastItemQuery.id)
+    return (parseInt(lastItemQuery.id) + 1)
 }
 
 router.post('/', upload.single('file'), async (req, res, next) => {
@@ -65,12 +64,6 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         // Saving the new item to the MongoDB 'items' collection
         await item.save();
         //logger.info("New user added successfully! " + user.user_name)
-
-        /**
-         const lastItemQuery = await collection.find().sort({'id': -1}).limit(1);
-         await lastItemQuery.forEach(item => {
-            secondChanceItem.id = (parseInt(item.id) + 1).toString();
-        });**/
         res.status(201).json(secondChanceItem);
     } catch (e) {
         next(e);
