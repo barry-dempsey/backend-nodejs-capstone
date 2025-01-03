@@ -11,9 +11,9 @@ const dbName = "secondChance"
 
 async function connectToDatabase() {
 
-    // MongoDB's connection URI and database name
-    const uri = url + dbName;
-    mongoose.connect(uri, {'dbName': `${dbName}`});
+  // MongoDB's connection URI and database name
+  const uri = url + dbName;
+  await mongoose.connect(uri, {'dbName': `${dbName}`});
 
 }
 

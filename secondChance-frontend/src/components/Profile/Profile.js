@@ -31,7 +31,7 @@ const Profile = () => {
                   name: name,
                   email:email
                 };
-        
+
                 setUserDetails(storedUserDetails);
                 setUpdatedDetails(storedUserDetails);
               }
@@ -76,10 +76,10 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       // Update the user details in session storage
-      sessionStorage.setItem("name", updatedDetails.name);
+      sessionStorage.setItem("first_name", updatedDetails.first_name);
       setUserDetails(updatedDetails);
       setEditMode(false);
-      setUserName(updatedDetails.name);
+      setUserName(updatedDetails.last_name);
       // Display success message to the user
       setChanged("Name Changed Successfully!");
       setTimeout(() => {

@@ -61,14 +61,14 @@ const itemsSchema = new Schema({
         required: false  // The field is required and must have a value.
     },
     comments: {
-        type: String,   // Data type is String.
+        type: Map,   // Data type is String.
         required: false  // The field is required and must have a value.
     },
 });
 
 // Creating a model from the schema. This model will represent the 'customers' collection in MongoDB.
 // The first argument is the name of the collection, and the second argument is the schema.
-const UserModel = mongoose.model('items', itemsSchema);
+const ItemsModel = mongoose.model('items', itemsSchema, 'items');
 
 // Exporting the CustomersModel to be used in other parts of the application.
-module.exports = UserModel;
+module.exports = ItemsModel;

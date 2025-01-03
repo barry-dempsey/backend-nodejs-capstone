@@ -58,6 +58,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
       "age_days": secondChanceItem['age_days'],
       "age_years": secondChanceItem['age_years'],
       "description": secondChanceItem['description'],
+      "image": secondChanceItem['image'],
       "comments": secondChanceItem['comments'],
     });
 
