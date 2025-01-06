@@ -100,6 +100,7 @@ router.put('/update', async (req, res) => {
         }
         const existingUser = await Users.findOne({email: email});
         existingUser.updatedAt = new Date();
+        existingUser.first_name = req.body.firstName
 
         const updatedUser = await Users.findOneAndUpdate(
             {email},
@@ -109,11 +110,12 @@ router.put('/update', async (req, res) => {
         const payload = {
             user: {
                 id: updatedUser._id.toString(),
+                firstName: updatedUser.first_name
             },
         };
 
-        const authtoken = jwt.sign(payload, JWT_SECRET);
-        res.json({authtoken});
+        const auth_token = jwt.sign(payload, JWT_SECRET);
+        res.json({auth_token, updatedUser});
     } catch (e) {
         return res.status(500).send('Internal server error');
     }
