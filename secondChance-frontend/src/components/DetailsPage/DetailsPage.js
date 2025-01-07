@@ -13,6 +13,10 @@ function DetailsPage() {
     const [error, setError] = useState(null);
     const { isLoggedIn } = useAppContext();
 
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleString('default', {month: 'long', day: 'numeric', year: 'numeric'});
+    };
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -69,7 +73,7 @@ function DetailsPage() {
                     {/* Product details */}
                     <p><strong>Category:</strong> {item.category}</p>
                     <p><strong>Condition:</strong> {item.condition}</p>
-                    <p><strong>Date Added:</strong> {item.date_added}</p>
+                    <p><strong>Date Added:</strong> {formatDate(item.date_added)}</p>
                     <p><strong>Age (Years):</strong> {item.age_years}</p>
                     <p><strong>Description:</strong> {item.description}</p>
                 </div>
