@@ -61,7 +61,7 @@ const itemsSchema = new Schema({
         required: false  // The field is required and must have a value.
     },
     comments: {
-        type: Map,   // Data type is String.
+        type: Array,   // Data type is String.
         required: false  // The field is required and must have a value.
     },
 });

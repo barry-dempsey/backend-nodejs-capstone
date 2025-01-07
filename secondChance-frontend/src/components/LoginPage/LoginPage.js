@@ -41,8 +41,8 @@ function LoginPage() {
         console.log('Json', json);
         if (json.auth_token) {
             sessionStorage.setItem('auth-token', json.authtoken);
-            sessionStorage.setItem('name', json.userName);
-            sessionStorage.setItem('email', json.userEmail);
+            sessionStorage.setItem('name', json.email);
+            sessionStorage.setItem('email', json.email);
 
             navigate('/app');
             setIsLoggedIn(true);

@@ -69,17 +69,17 @@ const handleSubmit = async (e) => {
       headers: {
         "Authorization": `Bearer ${authtoken}`,
         "Content-Type": "application/json",
-        "Email": email,
+        "email": email,
       },
       body: JSON.stringify(payload),
     });
 
     if (response.ok) {
       // Update the user details in session storage
-      sessionStorage.setItem("first_name", updatedDetails.first_name);
+      sessionStorage.setItem("name", updatedDetails.first_name);
       setUserDetails(updatedDetails);
       setEditMode(false);
-      setUserName(updatedDetails.last_name);
+      setUserName(updatedDetails.name);
       // Display success message to the user
       setChanged("Name Changed Successfully!");
       setTimeout(() => {
